@@ -1,0 +1,40 @@
+{:itonami.blueprint/id "cloud-itonami-isic-3091"
+ :itonami.blueprint/name "Manufacture of motorcycles"
+ :itonami.blueprint/isic-rev5 "3091"
+ :itonami.blueprint/domain :motorcycle/manufacturing
+ :itonami.blueprint/license "AGPL-3.0-or-later"
+ :itonami.blueprint/social-impact [:worker-safety :rider-safety :road-safety :emissions-compliance]
+ :itonami.blueprint/governor :motorcycle-plant-operations-governor
+ :itonami.blueprint/robotics true
+ :itonami.blueprint/required-technologies [:robotics :identity :forms :dmn :bpmn :audit-ledger :eda :cae]
+ :itonami.blueprint/optional-technologies []
+ :itonami.blueprint/status :public-oss
+ :itonami.blueprint/maturity :implemented
+ :itonami.blueprint/implemented-slice
+ "MotoAdvisor ⊣ Motorcycle Plant Operations Governor, langgraph-clj
+ StateGraph, append-only audit ledger. A plant OPERATIONS
+ COORDINATION actor for motorcycle manufacturing (frame-welding/
+ engine-assembly/final-assembly/test lines producing finished
+ motorcycles, scooters, mopeds and electric motorcycles) -- not
+ direct welding/assembly/test-bench-equipment control authority and
+ not type-approval/safety-certification authority. Four ops
+ (`:log-production-batch` / `:schedule-maintenance` /
+ `:flag-safety-concern` / `:coordinate-shipment`), all `:effect
+ :propose` only. Twelve concrete governor checks elaborate this
+ blueprint's four HARD invariants: propose-only effect, closed op
+ allowlist, closed proposal-effect allowlist (no direct
+ welding/assembly/test-bench-equipment control), permanent
+ equipment-actuate block, permanent type-approval/safety-
+ certification-authority block (this actor never self-issues an ECE
+ R78 brake-system / ECE R40 emissions motorcycle type-approval
+ certification), independent equipment verification/registration
+ before maintenance scheduling, independent batch verification/
+ registration before shipment coordination, independent
+ shipment-quantity recompute against the batch's own logged
+ production quantity, double-schedule guard, product-category
+ validation, engine-displacement plausibility validation, and
+ weld-defect-rate plausibility validation. Safety-concern flagging
+ (frame-weld-defect/brake-safety/emissions-compliance) ALWAYS
+ escalates to a human plant supervisor; `:log-production-batch` is
+ the only op eligible to auto-commit, and only at phase 3 when
+ governor-clean."}
