@@ -46,7 +46,7 @@
 
   Run: `clojure -M:dev:render-html [out-file]`
   (default out-file `docs/samples/operator-console.html`)."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [jp-go-dds.skin]
             [langgraph.graph :as g]
             [motomfg.governor :as governor]
