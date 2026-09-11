@@ -44,7 +44,7 @@
   Deterministic: no clock, no randomness, no network. Re-running writes
   a byte-identical file.
 
-  Run: `clojure -M:dev:render-html [out-file]`
+  Run: `kbb -M:dev:render-html [out-file]`
   (default out-file `docs/samples/operator-console.html`)."
   (:require [kotoba.lang.text :as str]
             [jp-go-dds.skin]
@@ -570,7 +570,7 @@
                           (ledger-section db)]))
        "\n</main>\n<footer>"
        "Generated at build time by <code>motomfg.render-html</code> "
-       "(<code>clojure -M:dev:render-html</code>) by driving the real "
+       "(<code>kbb -M:dev:render-html</code>) by driving the real "
        "<code>motomfg.operation</code> actor graph over the real "
        "<code>motomfg.store</code> seed. Deterministic — no clock, no randomness, no network. "
        "No usage, revenue or performance metric is claimed anywhere on this page."
