@@ -46,7 +46,7 @@
 
   Run: `kbb -M:dev:render-html [out-file]`
   (default out-file `docs/samples/operator-console.html`)."
-  (:require [kotoba.lang.text :as str]
+  (:require [kotoba.io :as kio] [kotoba.lang.text :as str]
             [jp-go-dds.skin]
             [langgraph.graph :as g]
             [motomfg.governor :as governor]
@@ -584,8 +584,8 @@
     (when (empty? hs)
       (throw (ex-info "no :governor-hold fact on the ledger — refusing to write a console that shows no real hold"
                       {:ledger-facts (count (store/ledger db))})))
-    (let [f (java.io.File. ^String out)]
-      (when-let [p (.getParentFile f)] (.mkdirs p))
+    (let [f (kio/file ^String out)]
+      (when-let [p (kio/parent-file f)] (kio/mkdirs p))
       (spit f (render result)))
     (println "wrote" out
              (str "(" (count (store/ledger db)) " ledger facts, "
