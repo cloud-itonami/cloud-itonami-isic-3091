@@ -1,0 +1,44 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:dev:physics` runs it.
+;;
+;; README: an ISIC 3091 plant welds frames, assembles engines and final
+;; drivetrains, and inspects finished motorcycles on structural, brake and
+;; emissions-dyno benches. The physical work around that plant: an arm
+;; lowering an engine into a welded frame, tensile-testing the frame tube
+;; before welding, and an AMR carrying a crated motorcycle up the loading
+;; ramp into a truck.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isic-3091"
+ :cases
+ [{:id :engine-into-frame
+   :kind :manipulator
+   :procedure "engine-marriage arm lifts an engine off the engine line pallet and lowers it into the welded frame's mounts"
+   :params {:l1-m 0.90 :l2-m 0.80 :m1-kg 30.0 :m2-kg 20.0
+            :from [1.00 0.20] :to [0.60 0.90] :duration-s 4.0 :steps 500}
+   :sweep {:param :payload-kg :values [30.0 45.0 60.0 80.0 100.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 1500.0 :basis "estimate: continuous shoulder torque of a ~100 kg-payload industrial arm class"}
+   :boundary {:lo 5.0 :hi 300.0}}
+  {:id :frame-tube-tensile
+   :kind :material
+   :procedure "incoming inspection: tensile test of an STKM13A frame-tube strip specimen (100 mm2 section) before frame welding"
+   :params {:length-m 0.10 :area-m2 1.0e-4 :youngs-modulus-pa 206.0e9 :hardening-pa 1.0e9
+            :density-kg-m3 7850.0 :max-force-n 40000.0}
+   :sweep {:param :yield-stress-pa :values [190.0e6 205.0e6 215.0e6 240.0e6 280.0e6]}
+   :quantity :yield-force-n
+   :limit {:min 21500.0 :basis "JIS G 3445 STKM13A: minimum yield point 215 N/mm2; x 100 mm2 = 21500 N"}
+   :boundary {:lo 170.0e6 :hi 300.0e6}}
+  {:id :crated-bike-up-truck-ramp
+   :kind :transport
+   :procedure "AMR carries a crated motorcycle (crate CoG 1.1 m) up the dock's loading ramp into the truck (12 m)"
+   :params {:mass-kg 400.0 :payload-kg 250.0 :distance-m 12.0 :v-max-mps 0.6 :a-max-mps2 0.3
+            :brake-decel-mps2 0.6 :drive-force-n 2500.0 :crr 0.015
+            :cog-height-m 0.35 :support-half-length-m 0.60 :payload-cog-height-m 1.10
+            :max-time-s 600.0}
+   :sweep {:param :slope-deg :values [0.0 4.0 8.0 12.0 16.0]}
+   :quantity :min-tipover-margin
+   :limit {:min 0.3 :basis "estimate: keep 30 % of the static restoring moment in reserve for ramp lips and crate shift"}
+   :boundary {:lo 0.0 :hi 25.0}}]}
